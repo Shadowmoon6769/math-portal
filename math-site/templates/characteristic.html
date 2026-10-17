@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Характеристические уравнения</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="menu">
+            <div class="nav-left">
+                <a href="/" class="brand-logo">🎓 Educational Website</a>
+            </div>
+
+            <div class="nav-center">
+                <div class="dropdown">
+                    <span class="dropbtn">Калькуляторы</span>
+                    <div class="dropdown-content">
+                        <a href="/">Главная</a>
+                        <a href="/quadratic">Квадратные уравнения</a>
+                        <a href="/matrix">Матрицы</a>
+                        <a href="/vector">Векторы</a>
+                        <a href="/characteristic">Характеристические уравнения</a>
+                        <a href="/combinatorics">Комбинаторика</a>
+                    </div>
+                </div>
+                <a href="/reference">Справочник</a>
+                {% if role == 'teacher' %}
+                    <a href="/teacher_panel" style="color: #dc2626; font-weight: bold;">Преподавательская</a>
+                {% endif %}
+            </div>
+
+            <div class="nav-right">
+                <div class="role-dropdown">
+                    <div class="role-badge {% if role == 'teacher' %}teacher{% endif %}">
+                        {% if role == 'teacher' %}👨‍🏫 Преподаватель{% else %}👨‍🎓 Студент{% endif %}
+                    </div>
+                    <div class="role-dropdown-content">
+                        <a href="/switch_role/student">👨‍🎓 Студент</a>
+                        <a href="/switch_role/teacher">👨‍🏫 Преподаватель</a>
+                    </div>
+                </div>
+
+                <div class="auth-buttons">
+                    <a href="/login" class="btn-auth btn-login">Вход</a>
+                    <a href="/register" class="btn-auth btn-register">Регистрация</a>
+                </div>
+            </div>
+        </nav>
+
+        <h1 style="text-align: center; margin-bottom: 8px;">Характеристические уравнения</h1>
+        <p style="text-align: center; color: #64748b; margin-bottom: 25px;">Для ОДУ вида: k² + pk + q = 0</p>
+
+        <form method="POST">
+            <input type="number" step="any" name="p" placeholder="Коэффициент p" required>
+            <input type="number" step="any" name="q" placeholder="Коэффициент q" required>
+            <button type="submit">Найти корни k₁, k₂</button>
+        </form>
+
+        {% if result %}
+            <div class="result">{{ result }}</div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

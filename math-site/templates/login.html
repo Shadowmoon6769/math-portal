@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Educational Website - Вход</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="menu">
+            <div class="nav-left">
+                <a href="/" class="brand-logo">🎓 Educational Website</a>
+            </div>
+            <div class="nav-center">
+                <a href="/">На главную</a>
+            </div>
+            <div class="nav-right">
+                <a href="/register" class="btn-auth btn-register">Регистрация</a>
+            </div>
+        </nav>
+
+        <h1 style="text-align: center; margin-bottom: 20px;">Вход в систему</h1>
+        <form style="max-width: 380px; margin: 0 auto;">
+            <input type="email" placeholder="Email" required>
+            <input type="password" placeholder="Пароль" required>
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+</body>
+</html>

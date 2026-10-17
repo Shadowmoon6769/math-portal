@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Educational Website - Панель Преподавателя</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="menu">
+            <div class="nav-left">
+                <a href="/" class="brand-logo">🎓 Educational Website</a>
+            </div>
+
+            <div class="nav-center">
+                <div class="dropdown">
+                    <span class="dropbtn">Калькуляторы</span>
+                    <div class="dropdown-content">
+                        <a href="/">Главная</a>
+                        <a href="/quadratic">Квадратные уравнения</a>
+                        <a href="/matrix">Матрицы</a>
+                        <a href="/vector">Векторы</a>
+                    </div>
+                </div>
+                <a href="/reference">Справочник</a>
+                <a href="/teacher_panel" style="color: #dc2626; font-weight: bold;">Преподавательская</a>
+            </div>
+
+            <div class="nav-right">
+                <div class="role-dropdown">
+                    <div class="role-badge teacher">
+                        👨‍🏫 Преподаватель
+                    </div>
+                    <div class="role-dropdown-content">
+                        <a href="/switch_role/student">👨‍🎓 Студент</a>
+                        <a href="/switch_role/teacher">👨‍🏫 Преподаватель</a>
+                    </div>
+                </div>
+
+                <div class="auth-buttons">
+                    <a href="/login" class="btn-auth btn-login">Вход</a>
+                    <a href="/register" class="btn-auth btn-register">Регистрация</a>
+                </div>
+            </div>
+        </nav>
+
+        <h1 style="text-align: center; margin-bottom: 8px;">Панель управления преподавателя</h1>
+        <p style="text-align: center; color: #64748b; margin-bottom: 25px;">Раздел доступен только преподавателям</p>
+
+        <div style="background: #ffffff; border: 1px solid #fecaca; border-radius: 12px; padding: 25px; max-width: 600px; margin: 0 auto;">
+            <h3 style="color: #dc2626; margin-top: 0;">📝 Методические материалы и контрольные работы</h3>
+            <p style="color: #334155; margin-top: 8px;">Здесь преподаватель может загружать варианты билетов, составлять тесты для 1–4 курсов и формировать отчетность.</p>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>Билеты к экзамену по Линейной алгебре (2 курс)</li>
+                <li>Контрольная работа: Дифференциальные уравнения (3 курс)</li>
+                <li>Тестовые задания по Теории вероятностей (4 курс)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

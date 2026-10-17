@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Educational Website - Справочник</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .course-tabs { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; }
+        .tab-btn { padding: 10px 22px; border: 1px solid #cbd5e1; background: #ffffff; color: #334155; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; }
+        .tab-btn:hover, .tab-btn.active { background: #2563eb; color: #ffffff; border-color: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+        .course-section { margin-bottom: 40px; }
+        .folder-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 14px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        summary { font-weight: 600; font-size: 1.05em; color: #1e293b; cursor: pointer; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; user-select: none; background: #ffffff; }
+        summary:hover { background: #f8fafc; color: #2563eb; }
+        summary::-webkit-details-marker { display: none; }
+        .folder-title { display: flex; align-items: center; gap: 12px; }
+        .folder-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; }
+        .icon-blue { background: #dbeafe; color: #2563eb; }
+        .icon-green { background: #dcfce7; color: #16a34a; }
+        .icon-purple { background: #f3e8ff; color: #9333ea; }
+        .icon-orange { background: #ffedd5; color: #ea580c; }
+        .arrow-icon { font-size: 12px; color: #94a3b8; transition: transform 0.3s; }
+        details[open] .arrow-icon { transform: rotate(180deg); }
+        details[open] summary { border-bottom: 1px solid #f1f5f9; }
+        .folder-content { padding: 20px; background: #fafafa; }
+        .formula-card { background: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #2563eb; padding: 16px 20px; margin-bottom: 12px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
+        .formula-card b { color: #0f172a; display: block; margin-bottom: 6px; font-size: 1.05em; }
+        .math-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+        .math-formula { background: #f1f5f9; padding: 8px 14px; border-radius: 6px; font-family: monospace; font-weight: bold; color: #1e293b; display: inline-block; font-size: 0.95em; }
+        .theorem-desc { color: #475569; font-size: 0.95em; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="menu">
+            <div class="nav-left">
+                <a href="/" class="brand-logo">🎓 Educational Website</a>
+            </div>
+
+            <div class="nav-center">
+                <div class="dropdown">
+                    <span class="dropbtn">Калькуляторы</span>
+                    <div class="dropdown-content">
+                        <a href="/">Главная</a>
+                        <a href="/quadratic">Квадратные уравнения</a>
+                        <a href="/matrix">Матрицы</a>
+                        <a href="/vector">Векторы</a>
+                        <a href="/characteristic">Характеристические уравнения</a>
+                        <a href="/combinatorics">Комбинаторика</a>
+                    </div>
+                </div>
+                <a href="/reference">Справочник</a>
+                {% if role == 'teacher' %}
+                    <a href="/teacher_panel" style="color: #dc2626; font-weight: bold;">Преподавательская</a>
+                {% endif %}
+            </div>
+
+            <div class="nav-right">
+                <div class="role-dropdown">
+                    <div class="role-badge {% if role == 'teacher' %}teacher{% endif %}">
+                        {% if role == 'teacher' %}👨‍🏫 Преподаватель{% else %}👨‍🎓 Студент{% endif %}
+                    </div>
+                    <div class="role-dropdown-content">
+                        <a href="/switch_role/student">👨‍🎓 Студент</a>
+                        <a href="/switch_role/teacher">👨‍🏫 Преподаватель</a>
+                    </div>
+                </div>
+
+                <div class="auth-buttons">
+                    <a href="/login" class="btn-auth btn-login">Вход</a>
+                    <a href="/register" class="btn-auth btn-register">Регистрация</a>
+                </div>
+            </div>
+        </nav>
+
+        <h1 style="text-align: center; margin-bottom: 8px;">Справочник высшей математики</h1>
+        <p style="text-align: center; color: #64748b; margin-bottom: 25px;">Теоремы и формулы для 1–4 курсов:</p>
+
+        <!-- Кнопки переключения курсов -->
+        <div class="course-tabs">
+            <button class="tab-btn active" onclick="filterCourses('all', this)">Все курсы</button>
+            <button class="tab-btn" onclick="filterCourses('c1', this)">1 курс</button>
+            <button class="tab-btn" onclick="filterCourses('c2', this)">2 курс</button>
+            <button class="tab-btn" onclick="filterCourses('c3', this)">3 курс</button>
+            <button class="tab-btn" onclick="filterCourses('c4', this)">4 курс</button>
+        </div>
+
+        <!-- ================= 1 КУРС ================= -->
+        <div class="course-section" id="section-c1">
+            <h2 style="color: #2563eb; margin: 20px 0 15px 0;">📚 1 курс</h2>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-blue">f(x)</div><span>1. Алгебра и уравнения</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card">
+                        <b>Основная теорема алгебры:</b>
+                        <div class="theorem-desc">Всякий многочлен степени n ≥ 1 имеет ровно n комплексных корней.</div>
+                        <div class="math-container"><div class="math-formula">P_n(x) = a_n xⁿ + ... + a₀ = 0</div></div>
+                    </div>
+                    <div class="formula-card">
+                        <b>Квадратное уравнение:</b>
+                        <div class="theorem-desc">Формулы расчета дискриминанта и корней уравнения.</div>
+                        <div class="math-container"><div class="math-formula">ax² + bx + c = 0</div><div class="math-formula">D = b² - 4ac</div><div class="math-formula">x₁,₂ = (-b ± √D) / (2a)</div></div>
+                    </div>
+                    <div class="formula-card">
+                        <b>Теорема Виета:</b>
+                        <div class="theorem-desc">Связь между корнями и коэффициентами квадратного уравнения.</div>
+                        <div class="math-container"><div class="math-formula">x₁ + x₂ = -p</div><div class="math-formula">x₁ · x₂ = q</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-blue">sin</div><span>2. Тригонометрия</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card">
+                        <b>Теорема синусов и косинусов:</b>
+                        <div class="theorem-desc">Соотношения между сторонами и углами произвольного треугольника.</div>
+                        <div class="math-container"><div class="math-formula">a / sin(A) = b / sin(B) = c / sin(C) = 2R</div><div class="math-formula">c² = a² + b² - 2ab · cos(C)</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-blue">lim</div><span>3. Пределы</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card">
+                        <b>Теорема Больцано-Коши:</b>
+                        <div class="theorem-desc">О промежуточном значении непрерывной функции на отрезке.</div>
+                        <div class="math-container"><div class="math-formula">lim_{x→0} (sin x / x) = 1</div><div class="math-formula">lim_{x→∞} (1 + 1/x)ˣ = e</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-blue">f'</div><span>4. Производные</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card">
+                        <b>Теорема Лагранжа:</b>
+                        <div class="theorem-desc">О среднем значении дифференцируемой функции.</div>
+                        <div class="math-container"><div class="math-formula">(xⁿ)' = n·xⁿ⁻¹</div><div class="math-formula">(eˣ)' = eˣ</div><div class="math-formula">(ln x)' = 1/x</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-blue">∫</div><span>5. Интегралы</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card">
+                        <b>Формула Ньютона-Лейбница:</b>
+                        <div class="theorem-desc">Связь определенного интеграла с первообразной функцией.</div>
+                        <div class="math-container"><div class="math-formula">∫_{a}^{b} f(x) dx = F(b) - F(a)</div></div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <!-- ================= 2 КУРС ================= -->
+        <div class="course-section" id="section-c2">
+            <h2 style="color: #16a34a; margin: 25px 0 15px 0;">📐 2 курс</h2>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-green">[A]</div><span>1. Матрицы</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #16a34a;">
+                        <b>Теорема Кэли-Гамильтона:</b>
+                        <div class="theorem-desc">Каждая квадратная матрица удовлетворяет своему характеристическому уравнению.</div>
+                        <div class="math-container"><div class="math-formula">Det(AB) = Det(A) · Det(B)</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-green">det</div><span>2. Определители и СЛУ</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #16a34a;">
+                        <b>Теорема Кронекера-Капелли:</b>
+                        <div class="theorem-desc">Условие совместности системы линейных уравнений.</div>
+                        <div class="math-container"><div class="math-formula">x_i = Δ_i / Δ</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-green">ā·b̄</div><span>3. Векторы</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #16a34a;">
+                        <b>Скалярное произведение:</b>
+                        <div class="theorem-desc">Геометрический и координатный расчеты векторов в пространстве.</div>
+                        <div class="math-container"><div class="math-formula">ā · b̄ = x₁x₂ + y₁y₂ + z₁z₂</div><div class="math-formula">|ā| = √(x² + y² + z²)</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-green">∬</div><span>4. Кратные интегралы</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #16a34a;">
+                        <b>Теорема Фубини:</b>
+                        <div class="theorem-desc">О сводимости кратного интеграла к повторному.</div>
+                        <div class="math-container"><div class="math-formula">∬_D f(x,y) dx dy</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-green">∭</div><span>5. Векторный анализ</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #16a34a;">
+                        <b>Формула Остроградского-Гаусса:</b>
+                        <div class="theorem-desc">Связь потока через замкнутую поверхность с дивергенцией.</div>
+                        <div class="math-container"><div class="math-formula">∭_V div(F) dV = ∬_S (F · n) dS</div></div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <!-- ================= 3 КУРС ================= -->
+        <div class="course-section" id="section-c3">
+            <h2 style="color: #9333ea; margin: 25px 0 15px 0;">⚙️ 3 курс</h2>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-purple">y'</div><span>1. ОДУ 1-го порядка</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #9333ea;">
+                        <b>Теорема Пикара:</b>
+                        <div class="theorem-desc">Существование и единственность решения задачи Коши.</div>
+                        <div class="math-container"><div class="math-formula">y' + p(x)y = q(x)</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-purple">y''</div><span>2. Дифференциальные уравнения высших порядков</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #9333ea;">
+                        <b>Характеристическое уравнение:</b>
+                        <div class="theorem-desc">Для линейных однородных уравнений с постоянными коэффициентами.</div>
+                        <div class="math-container"><div class="math-formula">k² + pk + q = 0</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-purple">∑</div><span>3. Числовые ряды</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #9333ea;">
+                        <b>Признак Даламбера:</b>
+                        <div class="theorem-desc">Исследование сходимости рядов на основе предельного отношения.</div>
+                        <div class="math-container"><div class="math-formula">L = lim_{n→∞} (a_{n+1} / a_n)</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-purple">T(x)</div><span>4. Степенные ряды</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #9333ea;">
+                        <b>Ряд Тейлора:</b>
+                        <div class="theorem-desc">Разложение функций в степенной ряд.</div>
+                        <div class="math-container"><div class="math-formula">f(x) = ∑_{n=0}^∞ [fⁿ⁾(a) / n!] · (x - a)ⁿ</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-purple">F(w)</div><span>5. Ряды Фурье</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #9333ea;">
+                        <b>Теорема Дирихле:</b>
+                        <div class="theorem-desc">Условия разложимости функции в тригонометрический ряд Фурье.</div>
+                        <div class="math-container"><div class="math-formula">f(x) = a₀/2 + ∑ (a_n cos(nx) + b_n sin(nx))</div></div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <!-- ================= 4 КУРС ================= -->
+        <div class="course-section" id="section-c4">
+            <h2 style="color: #ea580c; margin: 25px 0 15px 0;">📊 4 курс</h2>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-orange">P(A)</div><span>1. Вероятность</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #ea580c;">
+                        <b>Аксиоматика Колмогорова:</b>
+                        <div class="theorem-desc">Основные свойства и формулы классической вероятности.</div>
+                        <div class="math-container"><div class="math-formula">P(A) = m / n</div><div class="math-formula">C_n^k = n! / (k!(n-k)!)</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-orange">P(H|A)</div><span>2. Формула Байеса</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #ea580c;">
+                        <b>Теорема гипотез (Байеса):</b>
+                        <div class="theorem-desc">Переоценка вероятности гипотезы после появления нового события.</div>
+                        <div class="math-container"><div class="math-formula">P(H_i | A) = [P(H_i) · P(A | H_i)] / P(A)</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-orange">M[X]</div><span>3. Случайные величины</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #ea580c;">
+                        <b>Закон больших чисел (Чебышев):</b>
+                        <div class="theorem-desc">Стабилизация средних значений при большом числе испытаний.</div>
+                        <div class="math-container"><div class="math-formula">M[X] = ∑ x_i p_i</div><div class="math-formula">D[X] = M[X²] - (M[X])²</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-orange">N(μ,σ)</div><span>4. Законы распределения</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #ea580c;">
+                        <b>Центральная предельная теорема:</b>
+                        <div class="theorem-desc">Почему нормальное распределение доминирует в природе.</div>
+                        <div class="math-container"><div class="math-formula">P_n(k) = (λ^k · e^-λ) / k!</div></div>
+                    </div>
+                </div>
+            </details>
+            <details class="folder-card">
+                <summary><div class="folder-title"><div class="folder-icon icon-orange">X̄</div><span>5. Статистика</span></div><span class="arrow-icon">▼</span></summary>
+                <div class="folder-content">
+                    <div class="formula-card" style="border-left-color: #ea580c;">
+                        <b>Выборочный метод:</b>
+                        <div class="theorem-desc">Оценивание параметров совокупности по выборке.</div>
+                        <div class="math-container"><div class="math-formula">X̄ = (1/n) ∑ x_i</div></div>
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <script>
+        function filterCourses(courseId, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const sections = document.querySelectorAll('.course-section');
+            sections.forEach(sec => {
+                if (courseId === 'all' || sec.id === 'section-' + courseId) {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

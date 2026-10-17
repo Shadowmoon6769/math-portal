@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Векторы 3D</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="menu">
+            <div class="nav-left">
+                <a href="/" class="brand-logo">🎓 Educational Website</a>
+            </div>
+
+            <div class="nav-center">
+                <div class="dropdown">
+                    <span class="dropbtn">Калькуляторы</span>
+                    <div class="dropdown-content">
+                        <a href="/">Главная</a>
+                        <a href="/quadratic">Квадратные уравнения</a>
+                        <a href="/matrix">Матрицы</a>
+                        <a href="/vector">Векторы</a>
+                        <a href="/characteristic">Характеристические уравнения</a>
+                        <a href="/combinatorics">Комбинаторика</a>
+                    </div>
+                </div>
+                <a href="/reference">Справочник</a>
+                {% if role == 'teacher' %}
+                    <a href="/teacher_panel" style="color: #dc2626; font-weight: bold;">Преподавательская</a>
+                {% endif %}
+            </div>
+
+            <div class="nav-right">
+                <div class="role-dropdown">
+                    <div class="role-badge {% if role == 'teacher' %}teacher{% endif %}">
+                        {% if role == 'teacher' %}👨‍🏫 Преподаватель{% else %}👨‍🎓 Студент{% endif %}
+                    </div>
+                    <div class="role-dropdown-content">
+                        <a href="/switch_role/student">👨‍🎓 Студент</a>
+                        <a href="/switch_role/teacher">👨‍🏫 Преподаватель</a>
+                    </div>
+                </div>
+
+                <div class="auth-buttons">
+                    <a href="/login" class="btn-auth btn-login">Вход</a>
+                    <a href="/register" class="btn-auth btn-register">Регистрация</a>
+                </div>
+            </div>
+        </nav>
+
+        <h1 style="text-align: center; margin-bottom: 8px;">Векторы в пространстве 3D</h1>
+        <p style="text-align: center; color: #64748b; margin-bottom: 25px;">Расчет скалярного произведения и угла между векторами</p>
+
+        <form method="POST">
+            <p><b>Вектор ā (x₁, y₁, z₁):</b></p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+                <input type="number" step="any" name="x1" placeholder="x1" required>
+                <input type="number" step="any" name="y1" placeholder="y1" required>
+                <input type="number" step="any" name="z1" placeholder="z1" required>
+            </div>
+
+            <p><b>Вектор b̄ (x₂, y₂, z₂):</b></p>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+                <input type="number" step="any" name="x2" placeholder="x2" required>
+                <input type="number" step="any" name="y2" placeholder="y2" required>
+                <input type="number" step="any" name="z2" placeholder="z2" required>
+            </div>
+
+            <button type="submit">Рассчитать</button>
+        </form>
+
+        {% if result %}
+            <div class="result">{{ result }}</div>
+        {% endif %}
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>
