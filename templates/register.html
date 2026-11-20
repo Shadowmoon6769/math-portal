@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>ВышМат Онлайн - Регистрация</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="menu">
+            <div class="nav-left">
+                <a href="/" class="brand-logo">🎓 ВышМат Онлайн</a>
+            </div>
+            <div class="nav-center">
+                <a href="/">На главную</a>
+            </div>
+            <div class="nav-right">
+                <a href="/login" class="btn-auth btn-login">Вход</a>
+            </div>
+        </nav>
+
+        <h1 style="text-align: center; margin-bottom: 20px;">Регистрация</h1>
+
+        {% if error %}
+            <div style="max-width: 380px; margin: 0 auto 15px; padding: 10px; background: #ffdddd; color: #a00; border-radius: 6px; text-align: center;">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" style="max-width: 380px; margin: 0 auto;">
+            <input type="text" name="full_name" placeholder="Имя и Фамилия" required>
+            <input type="email" name="username" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+
+            <label style="display: block; margin: 10px 0 5px; font-weight: bold;">Кто вы?</label>
+            <select name="role" id="roleSelect" onchange="toggleRoleFields()" style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 6px;">
+                <option value="student">Студент</option>
+                <option value="teacher">Преподаватель</option>
+            </select>
+
+            <div id="courseBlock">
+                <label style="display: block; margin: 5px 0; font-weight: bold;">Выберите ваш курс:</label>
+                <select name="course" style="width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 6px;">
+                    <option value="1">1 курс</option>
+                    <option value="2">2 курс</option>
+                    <option value="3">3 курс</option>
+                    <option value="4">4 курс</option>
+                </select>
+            </div>
+
+            <div id="secretBlock" style="display: none;">
+                <input type="password" name="secret_key" placeholder="Секретный ключ преподавателя">
+            </div>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleRoleFields() {
+            const role = document.getElementById('roleSelect').value;
+            document.getElementById('courseBlock').style.display = (role === 'student') ? 'block' : 'none';
+            document.getElementById('secretBlock').style.display = (role === 'teacher') ? 'block' : 'none';
+        }
+    </script>
+</body>
+</html>

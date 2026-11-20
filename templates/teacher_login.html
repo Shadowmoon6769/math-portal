@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Вход для преподавателя</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container" style="max-width: 400px; margin-top: 80px;">
+        <h2 style="text-align: center; margin-bottom: 20px;">🔒 Доступ преподавателя</h2>
+        <p style="text-align: center; color: #64748b; margin-bottom: 20px;">Введите секретный ключ, выданный администратором:</p>
+
+        <form method="POST">
+            <input type="password" name="secret_key" placeholder="Секретный ключ" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px;">
+            <button type="submit" style="width: 100%; padding: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Войти</button>
+        </form>
+
+        {% if error %}
+            <div class="error" style="margin-top: 15px; text-align: center; color: #dc2626;">{{ error }}</div>
+        {% endif %}
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" style="color: #64748b; text-decoration: none;">← На главную</a>
+        </div>
+    </div>
+</body>
+</html>

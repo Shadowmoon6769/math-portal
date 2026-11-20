@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>ВышМат Онлайн - Вход</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="menu">
+            <div class="nav-left">
+                <a href="/" class="brand-logo">🎓 ВышМат Онлайн</a>
+            </div>
+            <div class="nav-center">
+                <a href="/">На главную</a>
+            </div>
+            <div class="nav-right">
+                <a href="/register" class="btn-auth btn-register">Регистрация</a>
+            </div>
+        </nav>
+
+        <h1 style="text-align: center; margin-bottom: 20px;">Вход в систему</h1>
+
+        {% if error %}
+            <div style="max-width: 380px; margin: 0 auto 15px; padding: 10px; background: #ffdddd; color: #a00; border-radius: 6px; text-align: center;">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form method="POST" style="max-width: 380px; margin: 0 auto;">
+            <input type="email" name="username" placeholder="Ваш Email" required>
+            <input type="password" name="password" placeholder="Пароль" required>
+            <button type="submit">Войти</button>
+        </form>
+    </div>
+</body>
+</html>
